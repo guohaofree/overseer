@@ -127,7 +127,7 @@ func (sp *slave) watchSignal() {
 		}
 		//start death-timer
 		go func() {
-			time.Sleep(sp.Config.TerminateTimeout)
+			time.Sleep(sp.Config.SlaveTerminateTimeout)
 			sp.debugf("timeout. forceful shutdown")
 			os.Exit(1)
 		}()

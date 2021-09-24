@@ -39,11 +39,14 @@ type Config struct {
 	//TerminateTimeout controls how long overseer should
 	//wait for the program to terminate itself. After this
 	//timeout, overseer will issue a SIGKILL.
-	TerminateTimeout time.Duration
+	TerminateTimeout      time.Duration
+	SlaveTerminateTimeout time.Duration
 	//MinFetchInterval defines the smallest duration between Fetch()s.
 	//This helps to prevent unwieldy fetch.Interfaces from hogging
 	//too many resources. Defaults to 1 second.
 	MinFetchInterval time.Duration
+	//FirstFetchAfter sleep a while then go to fetch loop
+	FirstFetchAfter time.Duration
 	//PreUpgrade runs after a binary has been retrieved, user defined checks
 	//can be run here and returning an error will cancel the upgrade.
 	PreUpgrade func(tempBinaryPath string) error
@@ -79,6 +82,9 @@ func validate(c *Config) error {
 	}
 	if c.TerminateTimeout <= 0 {
 		c.TerminateTimeout = 30 * time.Second
+	}
+	if c.SlaveTerminateTimeout <= 0 {
+		c.SlaveTerminateTimeout = 60 * time.Second
 	}
 	if c.MinFetchInterval <= 0 {
 		c.MinFetchInterval = 1 * time.Second

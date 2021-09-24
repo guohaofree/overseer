@@ -148,7 +148,6 @@ func (mp *master) sendSignal(s os.Signal) {
 	if mp.slaveCmd != nil && mp.slaveCmd.Process != nil {
 		if err := mp.slaveCmd.Process.Signal(s); err != nil {
 			mp.debugf("signal failed (%s), assuming slave process died unexpectedly", err)
-			os.Exit(1)
 		}
 	}
 }
@@ -178,6 +177,7 @@ func (mp *master) retreiveFileDescriptors() error {
 
 //fetchLoop is run in a goroutine
 func (mp *master) fetchLoop() {
+	time.Sleep(mp.Config.FirstFetchAfter)
 	min := mp.Config.MinFetchInterval
 	time.Sleep(min)
 	for {
